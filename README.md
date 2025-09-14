@@ -200,3 +200,15 @@ Sections are ordered as they would appear in the navigation.
 - No map or statistics in the travel section.
 - Current year is not shown in the footer.
 
+
+## Development
+
+To start the site locally, run:
+
+```bash
+npm install
+npm run dev
+```
+
+Then open http://localhost:3000 in your browser.
+
