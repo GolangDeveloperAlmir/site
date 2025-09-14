@@ -37,3 +37,12 @@ go.work.sum
 .idea/
 .vscode/
 
+# Node
+node_modules/
+.next/
+.DS_Store
+
+# Yarn
+.yarn/
+yarn-error.log
+yarn.lock
