@@ -212,3 +212,6 @@ npm run dev
 
 Then open http://localhost:3000 in your browser.
 
+## Deployment
+
+See [docs/deployment.md](docs/deployment.md) for Docker and HTTPS instructions.
