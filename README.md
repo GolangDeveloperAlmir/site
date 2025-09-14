@@ -203,11 +203,12 @@ Sections are ordered as they would appear in the navigation.
 
 ## Development
 
+This project uses Next.js with TypeScript and Yarn.
 To start the site locally, run:
 
 ```bash
-npm install
-npm run dev
+yarn install
+yarn dev
 ```
 
 Then open http://localhost:3000 in your browser.

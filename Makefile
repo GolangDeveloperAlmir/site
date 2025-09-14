@@ -2,16 +2,16 @@
 .RECIPEPREFIX = >
 
 install:
-> npm install
+> yarn install
 
 dev:
-> npm run dev
+> yarn dev
 
 build:
-> npm run build
+> yarn build
 
 start:
-> npm start
+> yarn start
 
 docker-build:
 > docker build -t personal-site .
@@ -23,4 +23,4 @@ down:
 > docker compose down
 
 ci:
-> npm test && npm run build
+> yarn test && yarn build

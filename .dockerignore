@@ -4,3 +4,4 @@ node_modules
 Dockerfile
 .gitignore
 README.md
+.yarn
