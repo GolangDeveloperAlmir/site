@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "next": "^15.5.3",
     "react": "^19.1.1",
