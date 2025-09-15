@@ -238,3 +238,5 @@ To build a container image directly:
 ```bash
 docker build -t personal-site .
 ```
+
+The Dockerfile enables Corepack so the pinned Yarn version is used automatically during the build.
