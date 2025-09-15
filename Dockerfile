@@ -2,8 +2,8 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 RUN corepack enable
-COPY package.json yarn.lock .yarnrc.yml ./
-RUN yarn install --immutable
+COPY package.json .yarnrc.yml ./
+RUN yarn install
 
 FROM node:20-alpine AS builder
 WORKDIR /app

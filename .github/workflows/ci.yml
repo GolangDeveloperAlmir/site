@@ -29,9 +29,9 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-          cache-dependency-path: yarn.lock
+          cache-dependency-path: package.json
       - run: corepack enable
-      - run: yarn install --immutable
+      - run: yarn install
       - run: yarn lint
 
   test:
@@ -43,9 +43,9 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-          cache-dependency-path: yarn.lock
+          cache-dependency-path: package.json
       - run: corepack enable
-      - run: yarn install --immutable
+      - run: yarn install
       - run: yarn test --ci --passWithNoTests
 
   build:
@@ -57,9 +57,9 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
-          cache-dependency-path: yarn.lock
+          cache-dependency-path: package.json
       - run: corepack enable
-      - run: yarn install --immutable
+      - run: yarn install
       - run: yarn build
 
   docker:
@@ -78,6 +78,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set repository lowercase
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Build & push image
         uses: docker/build-push-action@v6
         with:
@@ -86,8 +88,8 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}:sha-${{ github.sha }}
           provenance: false
 
   promote:

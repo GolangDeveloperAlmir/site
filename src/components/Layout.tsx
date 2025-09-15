@@ -1,6 +1,13 @@
+'use client';
 import { ReactNode, useEffect, useState } from 'react';
+import { DesignContext } from '../context/DesignContext';
 import Link from 'next/link';
 import DesignEditor from './DesignEditor';
+import AnnouncementBar from './AnnouncementBar';
+import CookieConsent from './CookieConsent';
+import VisitorCounter from './VisitorCounter';
+import KeyboardHints from './KeyboardHints';
+import Analytics from './Analytics';
 
 interface Props {
   children: ReactNode;
@@ -42,7 +49,10 @@ const Layout = ({ children }: Props) => {
   const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
 
   return (
-    <>
+    <DesignContext.Provider value={{ openEditor: () => setEditorOpen(true) }}>
+      <>
+      <Analytics />
+      <AnnouncementBar />
       <header className="header glass">
         <nav className="nav">
           <span className="logo">Almir</span>
@@ -89,10 +99,14 @@ const Layout = ({ children }: Props) => {
         ↑
       </button>
       <footer className="footer">
+        <VisitorCounter />
         <p>Built with Next.js</p>
         <a href="/rss.xml">RSS</a>
       </footer>
-    </>
+      <CookieConsent />
+      <KeyboardHints />
+      </>
+    </DesignContext.Provider>
   );
 };
 
