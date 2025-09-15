@@ -25,7 +25,7 @@ If you'd like to help, pick an item or suggest a new one.
 - [ ] Support left-side timeline markers and menu hover animations
 
 ### Content Sections
-- [ ] Build hero section with contact buttons and random quote
+- [x] Build hero section with contact buttons and random quote
 - [ ] Write About and Mission/Vision content with optional photo
 - [ ] Implement Skills & Languages section with categories, levels, badges and radar chart
 - [ ] Develop Projects cards, show-more/all-projects links and env-driven placeholders

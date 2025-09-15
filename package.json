@@ -19,7 +19,8 @@
   "dependencies": {
     "next": "^15.5.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"c
+    "react-dom": "^19.1.1",
+    "lucide-react": "^0.453.0"
   },
   "devDependencies": {
     "@types/node": "^24.4.0",

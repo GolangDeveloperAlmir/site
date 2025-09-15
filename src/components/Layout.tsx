@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react';
+import { DesignContext } from '../context/DesignContext';
 import Link from 'next/link';
 import DesignEditor from './DesignEditor';
 
@@ -42,7 +43,8 @@ const Layout = ({ children }: Props) => {
   const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
 
   return (
-    <>
+    <DesignContext.Provider value={{ openEditor: () => setEditorOpen(true) }}>
+      <>
       <header className="header glass">
         <nav className="nav">
           <span className="logo">Almir</span>
@@ -92,7 +94,8 @@ const Layout = ({ children }: Props) => {
         <p>Built with Next.js</p>
         <a href="/rss.xml">RSS</a>
       </footer>
-    </>
+      </>
+    </DesignContext.Provider>
   );
 };
 
