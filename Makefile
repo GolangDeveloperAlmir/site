@@ -27,3 +27,4 @@ ci:
 
 generate-secret:
 > ./scripts/generate-secret.sh
+
