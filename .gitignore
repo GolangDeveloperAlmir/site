@@ -46,8 +46,20 @@ go.work.sum
 # Node
 node_modules/
 .next/
-.DS_Store
+
+# Build and temp files
+out/
+dist/
+coverage/
 
 # Yarn
 .yarn/
 yarn-error.log
+.yarn.lock
+
+# Secrets
+.env*
+!.env.example
+
+# Mac OS file
+.DS_Store

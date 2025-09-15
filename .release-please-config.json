@@ -1,0 +1,9 @@
+{
+    "release-type": "node",
+    "packages": {
+        ".": {
+            "component": "site",
+            "package-name": "site"
+        }
+    }
+}

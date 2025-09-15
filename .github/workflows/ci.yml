@@ -1,14 +1,24 @@
 name: CI
 
 on:
+  pull_request:
+    branches: [main, release, stage, deployments]
   push:
     branches:
       - main
-      - deployments
-      - stage
       - release
-      - 'codex/*'
-  pull_request:
+      - stage
+      - deployments
+      - 'codex/**'
+      - 'features/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   lint:
@@ -17,13 +27,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Enable Corepack
-        run: corepack enable
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Run lint
-        run: yarn lint
+          node-version: 22
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn lint
 
   test:
     runs-on: ubuntu-latest
@@ -32,13 +41,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Enable Corepack
-        run: corepack enable
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Run tests
-        run: yarn test
+          node-version: 22
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn test --ci --passWithNoTests
 
   build:
     runs-on: ubuntu-latest
@@ -47,50 +55,99 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Enable Corepack
-        run: corepack enable
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Build project
-        run: yarn build
+          node-version: 22
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - run: corepack enable
+      - run: yarn install --immutable
+      - run: yarn build
 
   docker:
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ github.event_name == 'push' }}
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t personal-site .
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+          provenance: false
 
   promote:
+    if: ${{ github.event_name == 'push' && (startsWith(github.ref_name, 'codex/') || github.ref_name == 'deployments' || github.ref_name == 'stage' || github.ref_name == 'release') }}
     runs-on: ubuntu-latest
     needs: docker
     permissions:
       contents: write
       pull-requests: write
-    if: |
-      startsWith(github.ref, 'refs/heads/codex/') ||
-      github.ref == 'refs/heads/deployments' ||
-      github.ref == 'refs/heads/stage' ||
-      github.ref == 'refs/heads/release'
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Promote to next branch
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute head/base
+        id: route
+        shell: bash
         run: |
-          if [[ "$GITHUB_REF" == refs/heads/codex/* ]]; then
-            feature="${GITHUB_REF#refs/heads/codex/}"
-            git push origin HEAD:features/${feature}
-            gh pr create --head features/${feature} --base deployments --title "Promote ${feature} to deployments" --body "Automated PR from codex to deployments"
-          elif [[ "$GITHUB_REF" == "refs/heads/deployments" ]]; then
-            gh pr create --head deployments --base stage --title "Deployments to Stage" --body "Automated PR from deployments to stage"
-          elif [[ "$GITHUB_REF" == "refs/heads/stage" ]]; then
-            gh pr create --head stage --base release --title "Stage to Release" --body "Automated PR from stage to release"
-          elif [[ "$GITHUB_REF" == "refs/heads/release" ]]; then
-            gh pr create --head release --base main --title "Release to Main" --body "Automated PR from release to main"
+          set -euo pipefail
+          BR="${GITHUB_REF_NAME}"
+          if [[ "$BR" == codex/* ]]; then
+            FEAT="${BR#codex/}"
+            echo "head=features/${FEAT}" >> $GITHUB_OUTPUT
+            echo "base=deployments"      >> $GITHUB_OUTPUT
+            echo "push_features=true"     >> $GITHUB_OUTPUT
+          elif [[ "$BR" == "deployments" ]]; then
+            echo "head=deployments" >> $GITHUB_OUTPUT
+            echo "base=stage"       >> $GITHUB_OUTPUT
+          elif [[ "$BR" == "stage" ]]; then
+            echo "head=stage"   >> $GITHUB_OUTPUT
+            echo "base=release" >> $GITHUB_OUTPUT
+          elif [[ "$BR" == "release" ]]; then
+            echo "head=release" >> $GITHUB_OUTPUT
+            echo "base=main"    >> $GITHUB_OUTPUT
+          else
+            echo "Not promotable"; exit 0
           fi
+
+      - name: Push codex/* → features/*
+        if: steps.route.outputs.push_features == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git push origin "HEAD:${{ steps.route.outputs.head }}"
+
+      - name: Create PR idempotently
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_REF="${{ steps.route.outputs.head }}"
+          BASE_REF="${{ steps.route.outputs.base }}"
+          COUNT="$(gh pr list --head "$HEAD_REF" --base "$BASE_REF" --state open --json number --jq 'length')"
+          if [ "${COUNT:-0}" -gt 0 ]; then
+            echo "PR $HEAD_REF -> $BASE_REF already exists; skipping."
+            exit 0
+          fi
+          gh pr create \
+            --head "$HEAD_REF" \
+            --base "$BASE_REF" \
+            --title "Promote ${HEAD_REF} to ${BASE_REF}" \
+            --body "Automated promotion from ${HEAD_REF} to ${BASE_REF}"

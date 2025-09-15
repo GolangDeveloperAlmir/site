@@ -1,0 +1,33 @@
+name: Preview – Vercel
+on:
+    pull_request:
+        types: [opened, reopened, synchronize]
+permissions:
+    contents: read
+    deployments: write
+
+concurrency:
+    group: vercel-preview-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    vercel:
+        runs-on: ubuntu-latest
+        environment:
+            name: preview
+            url: ${{ steps.vercel.outputs.PREVIEW_URL }}
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Deploy to Vercel (Preview)
+              id: vercel
+              uses: BetaHuhn/deploy-to-vercel-action@v1
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+                  PRODUCTION: false
+                  GITHUB_DEPLOYMENT: true
+                  GITHUB_DEPLOYMENT_ENV: Preview

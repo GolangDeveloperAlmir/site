@@ -1,0 +1,58 @@
+name: Apply repository rulesets
+on:
+    push:
+        branches: [main]
+        paths:
+            - '.github/rulesets/**/*.json'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    administration: write
+
+jobs:
+    apply:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Apply rulesets from .github/rulesets
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('fs');
+                      const path = require('path');
+                      const dir = path.join(process.env.GITHUB_WORKSPACE, '.github/rulesets');
+                      if (!fs.existsSync(dir)) {
+                        core.info('No ruleset dir found, skipping.');
+                        return;
+                      }
+                      const files = fs.readdirSync(dir).filter(f => f.endsWith('.json'));
+                      if (files.length === 0) {
+                        core.info('No ruleset files to apply.');
+                        return;
+                      }
+                      const { owner, repo } = context.repo;
+
+                      for (const file of files) {
+                        const spec = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+                        core.startGroup(`Applying ruleset: ${spec.name} (${file})`);
+
+                        const { data: list } = await github.request('GET /repos/{owner}/{repo}/rulesets', {
+                          owner, repo, includes_parents: false, targets: spec.target ?? 'branch'
+                        });
+
+                        const existing = list.find(r => r.name === spec.name);
+                        if (existing) {
+                          const { data } = await github.request('PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}', {
+                            owner, repo, ruleset_id: existing.id, ...spec
+                          });
+                          core.info(`Updated ruleset #${data.id} (${data.name})`);
+                        } else {
+                          const { data } = await github.request('POST /repos/{owner}/{repo}/rulesets', {
+                            owner, repo, ...spec
+                          });
+                          core.info(`Created ruleset #${data.id} (${data.name})`);
+                        }
+                        core.endGroup();
+                      }

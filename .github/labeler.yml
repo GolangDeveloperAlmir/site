@@ -1,0 +1,8 @@
+codex:
+  - changed-files:
+      - any-glob-to-any-file: ['.github/workflows/**']
+infra:
+  - changed-files:
+      - any-glob-to-any-file: ['deployments/**', 'Dockerfile', 'Makefile']
+release:
+  - head-branch: ['^release$', '^stage$', '^deployments$']
