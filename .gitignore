@@ -51,4 +51,3 @@ node_modules/
 # Yarn
 .yarn/
 yarn-error.log
-yarn.lock

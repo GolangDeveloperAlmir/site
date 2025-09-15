@@ -208,11 +208,12 @@ Sections are ordered as they would appear in the navigation.
 - `secrets/` – generated secrets (ignored by git)
 - `certs/` – TLS certificates for HTTPS
 - `deployments/` – Docker and Nginx configuration
-- `docs/` – additional documentation
+- `docs/` – additional documentation such as [deployment](docs/deployment.md) and [design](docs/design.md) guides
 
 ## Development
 
 This project uses Next.js with TypeScript and Yarn.
+If Yarn is unavailable, enable it with `corepack enable`.
 To start the site locally, run:
 
 ```bash
