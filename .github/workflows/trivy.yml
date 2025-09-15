@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@0.24.0
+      - uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: fs
           ignore-unfixed: true
@@ -33,7 +33,7 @@ jobs:
           push: false
           load: true
           tags: site:ci-scan
-      - uses: aquasecurity/trivy-action@0.24.0
+      - uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: site:ci-scan
           format: table
