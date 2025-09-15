@@ -41,11 +41,6 @@ const Layout = ({ children }: Props) => {
 
   const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
 
-  const nextTheme = (t: Theme): Theme =>
-    t === 'dark' ? 'light' : t === 'light' ? 'sepia' : 'dark';
-
-  const upcoming = nextTheme(theme);
-
   return (
     <>
       <header className="header glass">
@@ -67,8 +62,12 @@ const Layout = ({ children }: Props) => {
           <button
             className="design-open"
             type="button"
+
+            aria-controls="design-editor"
+            aria-expanded={editorOpen}
             onClick={() => setEditorOpen(true)}
           >
+            Edit design
           </button>
         </nav>
       </header>

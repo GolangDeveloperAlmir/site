@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 
 type Theme = 'dark' | 'light' | 'sepia';
 
@@ -24,9 +25,21 @@ interface Props {
 const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
   const [importValue, setImportValue] = useState('');
 
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
   const copyJson = () => {
     const json = JSON.stringify({ theme, font });
-    navigator.clipboard.writeText(json);
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(json).catch(() => {});
+    }
+
   };
 
   const handleImport = () => {
@@ -40,8 +53,16 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
   };
 
   return (
-    <div className="design-editor">
-      <button onClick={onClose} className="close">Close</button>
+    <div
+      className="design-editor"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Design editor"
+      id="design-editor"
+    >
+      <button onClick={onClose} className="close" aria-label="Close design editor">
+        Close
+      </button>
 
       <label>
         Preset
