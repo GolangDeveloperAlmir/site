@@ -1,5 +1,8 @@
 # Task Tracker
 
+This checklist keeps track of what has been done and what still lies ahead.
+If you'd like to help, pick an item or suggest a new one.
+
 - [x] Introduce task tracking system
 - [x] Restructure repository into src, secrets, certs, deployments, scripts
 - [x] Update README and docs

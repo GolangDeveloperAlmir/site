@@ -1,7 +1,12 @@
-Almir Personal Site Structure
+# Almir Personal Site Structure
 
-This document outlines the structure of the personalised website based on your answers to the 160 yes/no questions. Each section is optional and can be toggled via the design editor.
-Sections are ordered as they would appear in the navigation.
+Welcome! This repository holds the source and planning notes for my personal
+website. The site is built with Next.js and is designed to be easily
+customisable. The list below outlines the planned sections and features in the
+order they would appear in the navigation.
+
+For setup instructions and other guides, check out the [docs](docs/README.md)
+folder.
 
 ## Global features
 
