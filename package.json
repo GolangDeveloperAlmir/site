@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "test": "echo \"No tests yet\" && exit 0",
-    "lint": "echo \"No lint configured\" && exit 0"
+    "lint": "echo \"No lint configured\" && exit 0",
+    "token:generate": "bash scripts/generate-gh-token.sh",
+    "token:check": "bash scripts/check-gh-token.sh",
+    "branch:protect": "bash scripts/apply-branch-rules.sh"
   },
   "keywords": [],
   "author": "",
