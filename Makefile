@@ -17,10 +17,13 @@ docker-build:
 > docker build -t personal-site .
 
 up:
-> docker compose up
+> docker compose -f deployments/docker-compose.yml up
 
 down:
-> docker compose down
+> docker compose -f deployments/docker-compose.yml down
 
 ci:
 > yarn test && yarn build
+
+generate-secret:
+> ./scripts/generate-secret.sh

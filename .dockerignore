@@ -1,7 +1,9 @@
 node_modules
 .next
 .git
-Dockerfile
 .gitignore
 README.md
 .yarn
+
+certs
+secrets

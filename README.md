@@ -201,9 +201,19 @@ Sections are ordered as they would appear in the navigation.
 - Current year is not shown in the footer.
 
 
+## Repository Structure
+
+- `src/` – application source (pages, components, styles)
+- `scripts/` – helper scripts
+- `secrets/` – generated secrets (ignored by git)
+- `certs/` – TLS certificates for HTTPS
+- `deployments/` – Docker and Nginx configuration
+- `docs/` – additional documentation such as [deployment](docs/deployment.md) and [design](docs/design.md) guides
+
 ## Development
 
 This project uses Next.js with TypeScript and Yarn.
+If Yarn is unavailable, enable it with `corepack enable`.
 To start the site locally, run:
 
 ```bash
@@ -213,6 +223,20 @@ yarn dev
 
 Then open http://localhost:3000 in your browser.
 
+Generate a random application secret:
+
+```bash
+make generate-secret
+```
+
 ## Deployment
 
 See [docs/deployment.md](docs/deployment.md) for Docker and HTTPS instructions.
+
+To build a container image directly:
+
+```bash
+docker build -t personal-site .
+```
+
+The Dockerfile enables Corepack so the pinned Yarn version is used automatically during the build.
