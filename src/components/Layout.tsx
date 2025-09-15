@@ -1,3 +1,4 @@
+'use client';
 import { ReactNode, useEffect, useState } from 'react';
 import { DesignContext } from '../context/DesignContext';
 import Link from 'next/link';
