@@ -5,16 +5,33 @@ interface Props {
   children: ReactNode;
 }
 
-const Layout = ({ children }: Props) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+type Theme = 'dark' | 'light' | 'sepia';
 
+const Layout = ({ children }: Props) => {
+  const [theme, setTheme] = useState<Theme>('dark');
+
+  // load initial theme from storage
+  useEffect(() => {
+    const stored = localStorage.getItem('theme') as Theme | null;
+    if (stored) {
+      setTheme(stored);
+    }
+  }, []);
+
+  // apply theme and persist changes
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
   }, [theme]);
+
+  const nextTheme = (t: Theme): Theme =>
+    t === 'dark' ? 'light' : t === 'light' ? 'sepia' : 'dark';
+
+  const upcoming = nextTheme(theme);
 
   return (
     <>
-      <header className="header">
+      <header className="header glass">
         <nav className="nav">
           <span className="logo">Almir</span>
           <ul className="links">
@@ -24,9 +41,9 @@ const Layout = ({ children }: Props) => {
           </ul>
           <button
             className="theme-toggle"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(upcoming)}
           >
-            {theme === 'dark' ? 'Light' : 'Dark'} mode
+            Switch to {upcoming} mode
           </button>
         </nav>
       </header>

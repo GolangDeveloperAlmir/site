@@ -8,6 +8,11 @@ html[data-theme='light'] {
   color: #111;
 }
 
+html[data-theme='sepia'] {
+  background: #f4ecd8;
+  color: #5b4636;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
@@ -16,12 +21,20 @@ body {
 .header {
   position: sticky;
   top: 0;
-  backdrop-filter: blur(8px);
-  background: rgba(0,0,0,0.4);
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.glass {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme='light'] .glass,
+html[data-theme='sepia'] .glass {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .nav .links {
