@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+
 type Theme = 'dark' | 'light' | 'sepia';
 
 type Config = {
@@ -24,6 +25,7 @@ interface Props {
 const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
   const [importValue, setImportValue] = useState('');
 
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -37,6 +39,7 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
     if (navigator?.clipboard) {
       navigator.clipboard.writeText(json).catch(() => {});
     }
+
   };
 
   const handleImport = () => {

@@ -62,6 +62,7 @@ const Layout = ({ children }: Props) => {
           <button
             className="design-open"
             type="button"
+
             aria-controls="design-editor"
             aria-expanded={editorOpen}
             onClick={() => setEditorOpen(true)}
