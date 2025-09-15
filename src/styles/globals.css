@@ -1,3 +1,7 @@
+html {
+  --font: sans-serif;
+}
+
 html[data-theme='dark'] {
   background: #111;
   color: #eee;
@@ -15,7 +19,7 @@ html[data-theme='sepia'] {
 
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: var(--font);
 }
 
 .header {
@@ -54,4 +58,31 @@ html[data-theme='sepia'] .glass {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
+}
+
+.design-editor {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: inherit;
+  overflow-y: auto;
+}
+
+html[data-theme='light'] .design-editor,
+html[data-theme='sepia'] .design-editor {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.design-editor label {
+  display: block;
+  margin: 1rem 0;
+}
+
+.design-editor textarea {
+  width: 100%;
+  min-height: 4rem;
 }

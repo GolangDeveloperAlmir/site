@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
+import DesignEditor from './DesignEditor';
 
 interface Props {
   children: ReactNode;
@@ -7,22 +8,38 @@ interface Props {
 
 type Theme = 'dark' | 'light' | 'sepia';
 
+const themes: Theme[] = ['dark', 'light', 'sepia'];
+
 const Layout = ({ children }: Props) => {
   const [theme, setTheme] = useState<Theme>('dark');
+  const [font, setFont] = useState('sans-serif');
+  const [editorOpen, setEditorOpen] = useState(false);
 
-  // load initial theme from storage
+  // load initial config from storage
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null;
+    const stored = localStorage.getItem('designConfig');
     if (stored) {
-      setTheme(stored);
+      try {
+        const cfg = JSON.parse(stored) as { theme?: Theme; font?: string };
+        if (cfg.theme) setTheme(cfg.theme);
+        if (cfg.font) setFont(cfg.font);
+      } catch {
+        // ignore
+      }
     }
   }, []);
 
-  // apply theme and persist changes
+  // apply config and persist changes
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    document.documentElement.style.setProperty('--font', font);
+    localStorage.setItem(
+      'designConfig',
+      JSON.stringify({ theme, font })
+    );
+  }, [theme, font]);
+
+  const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
 
   const nextTheme = (t: Theme): Theme =>
     t === 'dark' ? 'light' : t === 'light' ? 'sepia' : 'dark';
@@ -41,13 +58,30 @@ const Layout = ({ children }: Props) => {
           </ul>
           <button
             className="theme-toggle"
-            onClick={() => setTheme(upcoming)}
+            type="button"
+            aria-label={`Switch to ${nextTheme} mode`}
+            onClick={() => setTheme(nextTheme)}
           >
-            Switch to {upcoming} mode
+            Switch to {nextTheme} mode
+          </button>
+          <button
+            className="design-open"
+            type="button"
+            onClick={() => setEditorOpen(true)}
+          >
           </button>
         </nav>
       </header>
       <main>{children}</main>
+      {editorOpen && (
+        <DesignEditor
+          theme={theme}
+          setTheme={setTheme}
+          font={font}
+          setFont={setFont}
+          onClose={() => setEditorOpen(false)}
+        />
+      )}
       <button
         className="back-to-top"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
