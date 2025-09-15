@@ -15,6 +15,13 @@ const quotes = [
   'Stay hungry, stay foolish.'
 ];
 
+const withHttps = (url?: string) => {
+  if (!url) return '#';
+  return url.startsWith('http://') || url.startsWith('https://')
+    ? url
+    : `https://${url}`;
+};
+
 const Hero = () => {
   const { openEditor } = useDesignContext();
   const quote = useMemo(
@@ -31,27 +38,27 @@ const Hero = () => {
       Icon: Mail
     },
     {
-      href: process.env.NEXT_PUBLIC_TELEGRAM || '#',
+      href: withHttps(process.env.NEXT_PUBLIC_TELEGRAM),
       label: 'Telegram',
       Icon: Send
     },
     {
-      href: process.env.NEXT_PUBLIC_DISCORD || '#',
+      href: withHttps(process.env.NEXT_PUBLIC_DISCORD),
       label: 'Discord',
       Icon: MessageCircle
     },
     {
-      href: process.env.NEXT_PUBLIC_FACEBOOK || '#',
+      href: withHttps(process.env.NEXT_PUBLIC_FACEBOOK),
       label: 'Facebook',
       Icon: Facebook
     },
     {
-      href: process.env.NEXT_PUBLIC_STEAM || '#',
+      href: withHttps(process.env.NEXT_PUBLIC_STEAM),
       label: 'Steam',
       Icon: Gamepad2
     },
     {
-      href: process.env.NEXT_PUBLIC_GITHUB || '#',
+      href: withHttps(process.env.NEXT_PUBLIC_GITHUB),
       label: 'GitHub',
       Icon: Github
     }
