@@ -1,3 +1,9 @@
+# Secrets and certificates
+certs/*
+!certs/README.md
+secrets/*
+!secrets/README.md
+
 ### certificates template
 *.pem
 *.key

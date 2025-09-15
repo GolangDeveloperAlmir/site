@@ -201,6 +201,15 @@ Sections are ordered as they would appear in the navigation.
 - Current year is not shown in the footer.
 
 
+## Repository Structure
+
+- `src/` – application source (pages, components, styles)
+- `scripts/` – helper scripts
+- `secrets/` – generated secrets (ignored by git)
+- `certs/` – TLS certificates for HTTPS
+- `deployments/` – Docker and Nginx configuration
+- `docs/` – additional documentation
+
 ## Development
 
 This project uses Next.js with TypeScript and Yarn.
@@ -212,6 +221,12 @@ yarn dev
 ```
 
 Then open http://localhost:3000 in your browser.
+
+Generate a random application secret:
+
+```bash
+make generate-secret
+```
 
 ## Deployment
 

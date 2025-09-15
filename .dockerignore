@@ -5,3 +5,6 @@ Dockerfile
 .gitignore
 README.md
 .yarn
+
+certs
+secrets
