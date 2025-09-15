@@ -16,7 +16,7 @@ If you'd like to help, pick an item or suggest a new one.
 ### Global Features
 - [x] Implement dark/light/sepia theme switcher and glass UI
 - [x] Add design editor with presets, font switcher, and JSON import/export
-- [ ] Integrate cookie consent, announcement bar, visitor counter, analytics, keyboard hints
+ - [x] Integrate cookie consent, announcement bar, visitor counter, analytics, keyboard hints
 - [ ] Provide global search, RSS link, QR code, donate button, reading progress indicator and back-to-top button
 
 ### Navigation and Layout
