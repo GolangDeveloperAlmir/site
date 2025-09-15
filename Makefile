@@ -14,7 +14,7 @@ start:
 > yarn start
 
 docker-build:
-> docker build -f deployments/Dockerfile -t personal-site .
+> docker build -t personal-site .
 
 up:
 > docker compose -f deployments/docker-compose.yml up

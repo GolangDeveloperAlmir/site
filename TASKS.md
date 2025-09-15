@@ -5,6 +5,7 @@
 - [x] Update README and docs
 - [x] Update Makefile and scripts, add secret generation
 - [x] Update ignore files
+- [x] Add Dockerfile for container builds and update docs
 
 ## Upcoming
 

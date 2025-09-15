@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This project ships with a Docker-based setup for production. Deployment files live in the `deployments/` directory.
+This project ships with a Docker-based setup for production. The root `Dockerfile` builds the app, while additional deployment files (Compose and Nginx config) live in the `deployments/` directory.
 
 ## Prerequisites
 - Docker and Docker Compose
@@ -8,8 +8,8 @@ This project ships with a Docker-based setup for production. Deployment files li
 
 ## Build and Run
 ```
-make docker-build
-make up
+docker build -t personal-site .
+docker compose -f deployments/docker-compose.yml up
 ```
 The application will be available behind an Nginx reverse proxy on ports 80 and 443.
 

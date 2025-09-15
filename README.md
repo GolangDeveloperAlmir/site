@@ -232,3 +232,9 @@ make generate-secret
 ## Deployment
 
 See [docs/deployment.md](docs/deployment.md) for Docker and HTTPS instructions.
+
+To build a container image directly:
+
+```bash
+docker build -t personal-site .
+```
