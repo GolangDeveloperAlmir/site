@@ -1,0 +1,11 @@
+name: Feature request
+description: Suggest an idea
+labels: [infra]
+body:
+  - type: textarea
+    id: value
+    attributes: { label: Value/Goal, placeholder: Why do we need it? }
+    validations: { required: true }
+  - type: textarea
+    id: scope
+    attributes: { label: Scope, placeholder: High-level tasks }

@@ -1,0 +1,8 @@
+name: Chore
+description: Maintenance / infra work
+labels: [ci]
+body:
+  - type: textarea
+    id: work
+    attributes: { label: What to do, placeholder: "Refactor, update deps..." }
+    validations: { required: true }
