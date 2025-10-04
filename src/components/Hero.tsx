@@ -67,6 +67,7 @@ const Hero = () => {
 
   return (
     <section
+      id="hero"
       className="hero"
       style={{ padding: '4rem 1rem', textAlign: 'center' }}
     >
