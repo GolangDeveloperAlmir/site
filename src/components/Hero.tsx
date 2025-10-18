@@ -77,7 +77,7 @@ const Hero = () => {
     >
       <h1>Almir</h1>
       <p className="tagline">Personal space on the web</p>
-      <p className="quote">"{quote}"</p>
+      <p className="quote">&ldquo;{quote}&rdquo;</p>
       <div
         className="socials"
         style={{

@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import QRCode from 'qrcode';
+import * as QRCode from 'qrcode';
 
 const QRCodeWidget = () => {
   const [dataUrl, setDataUrl] = useState<string>('');
@@ -17,7 +18,13 @@ const QRCodeWidget = () => {
 
   return (
     <div className="qr-widget" aria-live="polite">
-      <img src={dataUrl} alt="QR code linking to this site" />
+      <Image
+        src={dataUrl}
+        alt="QR code linking to this site"
+        width={160}
+        height={160}
+        unoptimized
+      />
       <a download="almir-site-qr.png" href={dataUrl} className="qr-widget__download">
         Download QR
       </a>

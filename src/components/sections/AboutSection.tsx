@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 const withHttps = (url?: string | null) => {
@@ -56,7 +57,7 @@ const AboutSection = () => {
         </div>
         {photo && (
           <figure className="about__photo">
-            <img src={photo} alt="Almir portrait" />
+            <Image src={photo} alt="Almir portrait" width={320} height={400} unoptimized />
             <figcaption>Настоящий энтузиаст распределённых систем.</figcaption>
           </figure>
         )}

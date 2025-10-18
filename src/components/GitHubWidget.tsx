@@ -18,6 +18,14 @@ const parseRepos = () => {
     .filter(Boolean);
 };
 
+type GitHubCommitResponse = {
+  sha: string;
+  html_url: string;
+  commit: {
+    message?: string;
+  };
+};
+
 const GitHubWidget = () => {
   const [commits, setCommits] = useState<Commit[]>([]);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -33,10 +41,10 @@ const GitHubWidget = () => {
           repos.map(async (repo) => {
             const response = await fetch(`https://api.github.com/repos/${repo}/commits?per_page=3`);
             if (!response.ok) throw new Error('Failed request');
-            const data = await response.json();
-            return data.map((item: any) => ({
+            const data: GitHubCommitResponse[] = await response.json();
+            return data.map((item) => ({
               sha: item.sha,
-              message: item.commit.message.split('\n')[0],
+              message: (item.commit?.message || '').split('\n')[0] || 'Без сообщения',
               url: item.html_url,
               repo
             }));

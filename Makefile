@@ -23,7 +23,7 @@ down:
 > docker compose -f deployments/docker-compose.yml down
 
 ci:
-> yarn test && yarn build
+> yarn verify
 
 generate-secret:
 > ./scripts/generate-secret.sh

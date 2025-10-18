@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useMemo, useState } from 'react';
 
 const parseGalleryFromEnv = (): string[] => {
@@ -81,7 +82,13 @@ const GallerySection = () => {
               className="gallery__item"
               onClick={() => openLightbox(index)}
             >
-              <img src={src} alt={`Галерея ${index + 1}`} />
+              <Image
+                src={src}
+                alt={`Галерея ${index + 1}`}
+                width={800}
+                height={600}
+                unoptimized
+              />
             </button>
           ))}
         </div>
@@ -91,7 +98,13 @@ const GallerySection = () => {
           <button type="button" onClick={prevSlide} aria-label="Предыдущее изображение">
             ←
           </button>
-          <img src={images[slideIndex]} alt={`Слайд ${slideIndex + 1}`} />
+          <Image
+            src={images[slideIndex]}
+            alt={`Слайд ${slideIndex + 1}`}
+            width={1200}
+            height={800}
+            unoptimized
+          />
           <button type="button" onClick={nextSlide} aria-label="Следующее изображение">
             →
           </button>
@@ -113,7 +126,13 @@ const GallerySection = () => {
           >
             ‹
           </button>
-          <img src={images[lightboxIndex]} alt={`Просмотр ${lightboxIndex + 1}`} />
+          <Image
+            src={images[lightboxIndex]}
+            alt={`Просмотр ${lightboxIndex + 1}`}
+            width={1400}
+            height={980}
+            unoptimized
+          />
           <button
             className="gallery__lightbox-nav gallery__lightbox-nav--next"
             onClick={() =>
