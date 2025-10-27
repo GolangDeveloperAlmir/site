@@ -1,5 +1,6 @@
 'use client';
 import { ReactNode, useEffect, useState } from 'react';
+import Head from 'next/head';
 import { DesignContext } from '../context/DesignContext';
 import Link from 'next/link';
 import DesignEditor from './DesignEditor';
@@ -51,6 +52,10 @@ const Layout = ({ children }: Props) => {
   return (
     <DesignContext.Provider value={{ openEditor: () => setEditorOpen(true) }}>
       <>
+      <Head>
+        <title>Almir</title>
+        <meta name="description" content="Almir — Personal space on the web" />
+      </Head>
       <Analytics />
       <AnnouncementBar />
       <header className="header glass">
@@ -72,7 +77,6 @@ const Layout = ({ children }: Props) => {
           <button
             className="design-open"
             type="button"
-
             aria-controls="design-editor"
             aria-expanded={editorOpen}
             onClick={() => setEditorOpen(true)}

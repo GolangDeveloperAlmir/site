@@ -41,12 +41,12 @@ interface Props {
   setTheme: (t: Theme) => void;
   font: string;
   setFont: (f: string) => void;
-  primaryColor: string;
-  setPrimaryColor: (value: string) => void;
-  accentColor: string;
-  setAccentColor: (value: string) => void;
-  animationPreset: 'calm' | 'float' | 'pulse';
-  setAnimationPreset: (value: 'calm' | 'float' | 'pulse') => void;
+  primaryColor?: string;
+  setPrimaryColor?: (value: string) => void;
+  accentColor?: string;
+  setAccentColor?: (value: string) => void;
+  animationPreset?: 'calm' | 'float' | 'pulse';
+  setAnimationPreset?: (value: 'calm' | 'float' | 'pulse') => void;
   onClose: () => void;
 }
 
@@ -55,12 +55,12 @@ const DesignEditor = ({
   setTheme,
   font,
   setFont,
-  primaryColor,
-  setPrimaryColor,
-  accentColor,
-  setAccentColor,
-  animationPreset,
-  setAnimationPreset,
+  primaryColor = '#8b5cf6',
+  setPrimaryColor = () => {},
+  accentColor = '#22d3ee',
+  setAccentColor = () => {},
+  animationPreset = 'calm',
+  setAnimationPreset = () => {},
   onClose
 }: Props) => {
   const [importValue, setImportValue] = useState('');

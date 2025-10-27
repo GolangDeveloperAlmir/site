@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const withHttps = (url?: string | null) => {
   if (!url) return null;
-  return url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+  return url.startsWith('https://') || url.startsWith('https://') ? url : `https://${url}`;
 };
 
 const AboutSection = () => {
