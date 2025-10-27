@@ -28,7 +28,16 @@ const KeyboardHints = () => {
             <kbd>/</kbd> Focus search
           </li>
           <li>
+            <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd> Open search
+          </li>
+          <li>
             <kbd>?</kbd> Toggle keyboard help
+          </li>
+          <li>
+            <kbd>Alt</kbd> + <kbd>T</kbd> Toggle Pomodoro timer
+          </li>
+          <li>
+            <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>↑</kbd> Scroll to top
           </li>
         </ul>
         <button type="button" onClick={() => setOpen(false)}>

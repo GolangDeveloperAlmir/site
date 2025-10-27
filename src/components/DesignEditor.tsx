@@ -7,12 +7,33 @@ type Theme = 'dark' | 'light' | 'sepia';
 type Config = {
   theme: Theme;
   font: string;
+  primaryColor: string;
+  accentColor: string;
+  animationPreset: 'calm' | 'float' | 'pulse';
 };
 
 const presets: Record<string, Config> = {
-  default: { theme: 'dark', font: 'sans-serif' },
-  ocean: { theme: 'light', font: 'serif' },
-  forest: { theme: 'sepia', font: 'monospace' },
+  default: {
+    theme: 'dark',
+    font: 'sans-serif',
+    primaryColor: '#8b5cf6',
+    accentColor: '#22d3ee',
+    animationPreset: 'calm'
+  },
+  ocean: {
+    theme: 'light',
+    font: 'serif',
+    primaryColor: '#0ea5e9',
+    accentColor: '#f97316',
+    animationPreset: 'float'
+  },
+  forest: {
+    theme: 'sepia',
+    font: 'monospace',
+    primaryColor: '#16a34a',
+    accentColor: '#facc15',
+    animationPreset: 'pulse'
+  }
 };
 
 interface Props {
@@ -20,10 +41,28 @@ interface Props {
   setTheme: (t: Theme) => void;
   font: string;
   setFont: (f: string) => void;
+  primaryColor: string;
+  setPrimaryColor: (value: string) => void;
+  accentColor: string;
+  setAccentColor: (value: string) => void;
+  animationPreset: 'calm' | 'float' | 'pulse';
+  setAnimationPreset: (value: 'calm' | 'float' | 'pulse') => void;
   onClose: () => void;
 }
 
-const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
+const DesignEditor = ({
+  theme,
+  setTheme,
+  font,
+  setFont,
+  primaryColor,
+  setPrimaryColor,
+  accentColor,
+  setAccentColor,
+  animationPreset,
+  setAnimationPreset,
+  onClose
+}: Props) => {
   const [importValue, setImportValue] = useState('');
 
 
@@ -36,7 +75,7 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
   }, [onClose]);
 
   const copyJson = () => {
-    const json = JSON.stringify({ theme, font });
+    const json = JSON.stringify({ theme, font, primaryColor, accentColor, animationPreset });
     if (navigator?.clipboard) {
       navigator.clipboard.writeText(json).catch(() => {});
     }
@@ -48,6 +87,9 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
       const parsed = JSON.parse(importValue) as Partial<Config>;
       if (parsed.theme) setTheme(parsed.theme);
       if (parsed.font) setFont(parsed.font);
+      if (parsed.primaryColor) setPrimaryColor(parsed.primaryColor);
+      if (parsed.accentColor) setAccentColor(parsed.accentColor);
+      if (parsed.animationPreset) setAnimationPreset(parsed.animationPreset);
     } catch {
       // ignore parse errors
     }
@@ -74,6 +116,9 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
             if (preset) {
               setTheme(preset.theme);
               setFont(preset.font);
+              setPrimaryColor(preset.primaryColor);
+              setAccentColor(preset.accentColor);
+              setAnimationPreset(preset.animationPreset);
             }
           }}
           defaultValue=""
@@ -95,6 +140,36 @@ const DesignEditor = ({ theme, setTheme, font, setFont, onClose }: Props) => {
           <option value="sans-serif">Sans-serif</option>
           <option value="serif">Serif</option>
           <option value="monospace">Monospace</option>
+        </select>
+      </label>
+
+      <label>
+        Primary colour
+        <input
+          type="color"
+          value={primaryColor}
+          onChange={(event) => setPrimaryColor(event.target.value)}
+        />
+      </label>
+
+      <label>
+        Accent colour
+        <input
+          type="color"
+          value={accentColor}
+          onChange={(event) => setAccentColor(event.target.value)}
+        />
+      </label>
+
+      <label>
+        Animation preset
+        <select
+          value={animationPreset}
+          onChange={(event) => setAnimationPreset(event.target.value as 'calm' | 'float' | 'pulse')}
+        >
+          <option value="calm">Calm</option>
+          <option value="float">Float</option>
+          <option value="pulse">Pulse</option>
         </select>
       </label>
 

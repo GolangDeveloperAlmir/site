@@ -9,15 +9,10 @@ const ReadingProgress = () => {
 
   useEffect(() => {
     const update = () => {
-      const { scrollHeight, clientHeight } = document.documentElement;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const maxScroll = scrollHeight - clientHeight;
-      if (maxScroll <= 0) {
-        setProgress(0);
-        return;
-      }
-      const percentage = (scrollTop / maxScroll) * 100;
-      setProgress(clamp(percentage));
+      const scrollTop = window.scrollY;
+      const height = document.body.scrollHeight - window.innerHeight;
+      const raw = height > 0 ? (scrollTop / height) * 100 : 0;
+      setProgress(clamp(raw));
     };
 
     update();
@@ -31,7 +26,7 @@ const ReadingProgress = () => {
 
   return (
     <div className="reading-progress" aria-hidden="true">
-      <div className="reading-progress-bar" style={{ width: `${progress}%` }} />
+      <div style={{ width: `${progress}%` }} />
     </div>
   );
 };

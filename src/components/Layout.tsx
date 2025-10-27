@@ -1,17 +1,5 @@
 'use client';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
-import type {
-  CSSProperties,
-  MouseEvent as ReactMouseEvent
-} from 'react';
-import { ArrowUp, MessageCircle, Sparkles } from 'lucide-react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { DesignContext } from '../context/DesignContext';
 import Link from 'next/link';
 import DesignEditor from './DesignEditor';
@@ -22,7 +10,9 @@ import KeyboardHints from './KeyboardHints';
 import Analytics from './Analytics';
 import GlobalSearch from './GlobalSearch';
 import ReadingProgress from './ReadingProgress';
-import QRCodeBadge from './QRCodeBadge';
+import QRCodeWidget from './QRCodeWidget';
+import FloatingControls from './FloatingControls';
+import PomodoroTimer from './PomodoroTimer';
 
 interface Props {
   children: ReactNode;
@@ -51,73 +41,30 @@ const withHttps = (url?: string) => {
 const Layout = ({ children }: Props) => {
   const [theme, setTheme] = useState<Theme>('dark');
   const [font, setFont] = useState('sans-serif');
+  const [primaryColor, setPrimaryColor] = useState('#8b5cf6');
+  const [accentColor, setAccentColor] = useState('#22d3ee');
+  const [animationPreset, setAnimationPreset] = useState<'calm' | 'float' | 'pulse'>('calm');
   const [editorOpen, setEditorOpen] = useState(false);
-  const navItems = useMemo<NavItem[]>(
-    () => [
-      {
-        href: '#hero',
-        label: 'Главная',
-        accent: { from: '#6366f1', to: '#8b5cf6' }
-      },
-      {
-        href: '#about',
-        label: 'Обо мне',
-        accent: { from: '#f97316', to: '#facc15' }
-      },
-      {
-        href: '#mission',
-        label: 'Миссия',
-        accent: { from: '#ec4899', to: '#f97316' }
-      },
-      {
-        href: '#skills',
-        label: 'Навыки',
-        accent: { from: '#22c55e', to: '#84cc16' }
-      },
-      {
-        href: '#projects',
-        label: 'Проекты',
-        accent: { from: '#22d3ee', to: '#0ea5e9' }
-      },
-      {
-        href: '#questions',
-        label: 'Вопросы',
-        accent: { from: '#a855f7', to: '#6366f1' }
-      },
-      {
-        href: '#timeline',
-        label: 'Таймлайн',
-        accent: { from: '#10b981', to: '#14b8a6' }
-      },
-      {
-        href: '#contact',
-        label: 'Контакты',
-        accent: { from: '#f43f5e', to: '#ec4899' }
-      }
-    ],
-    []
-  );
-  const [activeLink, setActiveLink] = useState(
-    navItems[0]?.href ?? '#hero'
-  );
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [underlineStyle, setUnderlineStyle] = useState<CSSProperties>();
-  const [navScrollable, setNavScrollable] = useState(false);
-  const [navScrollPosition, setNavScrollPosition] = useState<
-    'none' | 'start' | 'middle' | 'end'
-  >('none');
-  const linksWrapperRef = useRef<HTMLDivElement | null>(null);
-  const linksListRef = useRef<HTMLUListElement | null>(null);
-  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [pomodoroOpen, setPomodoroOpen] = useState(false);
 
   // load initial config from storage
   useEffect(() => {
     const stored = localStorage.getItem('designConfig');
     if (stored) {
       try {
-        const cfg = JSON.parse(stored) as { theme?: Theme; font?: string };
+        const cfg = JSON.parse(stored) as {
+          theme?: Theme;
+          font?: string;
+          primaryColor?: string;
+          accentColor?: string;
+          animationPreset?: 'calm' | 'float' | 'pulse';
+        };
         if (cfg.theme) setTheme(cfg.theme);
         if (cfg.font) setFont(cfg.font);
+        if (cfg.primaryColor) setPrimaryColor(cfg.primaryColor);
+        if (cfg.accentColor) setAccentColor(cfg.accentColor);
+        if (cfg.animationPreset) setAnimationPreset(cfg.animationPreset);
       } catch {
         // ignore
       }
@@ -128,11 +75,14 @@ const Layout = ({ children }: Props) => {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.setProperty('--font', font);
+    document.documentElement.style.setProperty('--primary', primaryColor);
+    document.documentElement.style.setProperty('--accent', accentColor);
+    document.documentElement.dataset.animationPreset = animationPreset;
     localStorage.setItem(
       'designConfig',
-      JSON.stringify({ theme, font })
+      JSON.stringify({ theme, font, primaryColor, accentColor, animationPreset })
     );
-  }, [theme, font]);
+  }, [theme, font, primaryColor, accentColor, animationPreset]);
 
   const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
   const donateHref = useMemo(
@@ -308,92 +258,129 @@ const Layout = ({ children }: Props) => {
     };
   }, [navItems.length, font]);
 
+  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+  const openContact = useCallback(() => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA';
+
+      if (event.key === '/' && !event.ctrlKey && !event.metaKey && !isTyping) {
+        event.preventDefault();
+        openSearch();
+      }
+
+      if (
+        (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) &&
+        !event.shiftKey
+      ) {
+        event.preventDefault();
+        openSearch();
+      }
+
+      if (event.key === 'ArrowUp' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        scrollToTop();
+      }
+
+      if (event.key === 't' && event.altKey) {
+        event.preventDefault();
+        setPomodoroOpen((value) => !value);
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [openSearch, scrollToTop]);
+
+  const donateUrl = process.env.NEXT_PUBLIC_DONATE_URL;
+
+  const navItems = useMemo(
+    () => [
+      { href: '#about', label: 'About' },
+      { href: '#mission', label: 'Mission' },
+      { href: '#skills', label: 'Skills' },
+      { href: '#projects', label: 'Projects' },
+      { href: '#interview', label: 'Questions' },
+      { href: '#travel', label: 'Travel' },
+      { href: '#gallery', label: 'Gallery' },
+      { href: '#timelines', label: 'Timelines' },
+      { href: '#achievements', label: 'Achievements' },
+      { href: '#inspiration', label: 'Inspiration' },
+      { href: '#github', label: 'GitHub' },
+      { href: '#faq', label: 'FAQ' },
+      { href: '#now', label: 'Now' },
+      { href: '#recommended', label: 'Recommended' },
+      { href: '#microblog', label: 'Journal' },
+      { href: '#music', label: 'Music' },
+      { href: '#coming-soon', label: 'Soon' },
+      { href: '#contact', label: 'Contact' }
+    ],
+    []
+  );
+
   return (
     <DesignContext.Provider value={{ openEditor: openDesignEditor }}>
       <>
       <Analytics />
       <ReadingProgress />
       <AnnouncementBar />
-      <header className="header">
-        <div className="header-shell glass">
-          <nav className="nav" aria-label="Основная навигация">
-            <span className="logo">Almir</span>
-            <div
-              ref={linksWrapperRef}
-              className="nav-links-wrapper"
-              data-scrollable={navScrollable ? 'true' : undefined}
-              data-scroll-position={navScrollPosition}
+      <ReadingProgress />
+      <header className="header glass">
+        <nav className="nav">
+          <span className="logo">Almir</span>
+          <ul className="links">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
+              </li>
+            ))}
+          </ul>
+          <div className="nav-actions">
+            <button
+              className="search-toggle"
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={searchOpen}
             >
-              <ul ref={linksListRef} className="links">
-                {navItems.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`nav-link${
-                        activeLink === item.href ? ' is-active' : ''
-                      }`}
-                      aria-current={
-                        activeLink === item.href ? 'page' : undefined
-                      }
-                      onClick={(event) => handleNavClick(event, item.href)}
-                      onMouseEnter={() => setHoveredLink(item.href)}
-                      onMouseLeave={() => setHoveredLink(null)}
-                      onFocus={() => setHoveredLink(item.href)}
-                      onBlur={() => setHoveredLink(null)}
-                      style={
-                        {
-                          '--accent-from': item.accent.from,
-                          '--accent-to': item.accent.to,
-                          '--link-accent': item.accent.to
-                        } as CSSProperties
-                      }
-                      ref={(element) => {
-                        linkRefs.current[item.href] = element;
-                      }}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-                {underlineStyle && (
-                  <span
-                    aria-hidden="true"
-                    className="nav-underline"
-                    style={underlineStyle}
-                  />
-                )}
-              </ul>
-            </div>
-            <div className="nav-actions">
-              <GlobalSearch />
-              <button
-                className="theme-toggle"
-                type="button"
-                aria-label={`Switch to ${nextTheme} mode`}
-                onClick={() => setTheme(nextTheme)}
-              >
-                Switch to {nextTheme} mode
-              </button>
-              <button
-                className="design-open"
-                type="button"
-                aria-controls="design-editor"
-                aria-expanded={editorOpen}
-                onClick={openDesignEditor}
-              >
-                Edit design
-              </button>
+              Search
+            </button>
+            <button
+              className="theme-toggle"
+              type="button"
+              aria-label={`Switch to ${nextTheme} mode`}
+              onClick={() => setTheme(nextTheme)}
+            >
+              Switch to {nextTheme} mode
+            </button>
+            <button
+              className="design-open"
+              type="button"
+              aria-controls="design-editor"
+              aria-expanded={editorOpen}
+              onClick={() => setEditorOpen(true)}
+            >
+              Edit design
+            </button>
+            {donateUrl && (
               <a
-                className="donate-button"
-                href={donateHref}
+                className="donate-link"
+                href={donateUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Donate
               </a>
-            </div>
-          </nav>
-        </div>
+            )}
+          </div>
+        </nav>
       </header>
       <main>{children}</main>
       {editorOpen && (
@@ -402,13 +389,19 @@ const Layout = ({ children }: Props) => {
           setTheme={setTheme}
           font={font}
           setFont={setFont}
+          primaryColor={primaryColor}
+          setPrimaryColor={setPrimaryColor}
+          accentColor={accentColor}
+          setAccentColor={setAccentColor}
+          animationPreset={animationPreset}
+          setAnimationPreset={setAnimationPreset}
           onClose={() => setEditorOpen(false)}
         />
       )}
-      <div
-        className="floating-controls"
-        role="group"
-        aria-label="Быстрые действия"
+      <button
+        className="back-to-top"
+        onClick={scrollToTop}
+        aria-label="Back to top"
       >
         <button
           type="button"
@@ -440,40 +433,22 @@ const Layout = ({ children }: Props) => {
       </div>
       <footer className="footer">
         <VisitorCounter />
-        <QRCodeBadge />
-        <nav aria-label="Карта сайта" className="footer-sitemap">
-          <ul>
-            {navItems.map((item) => (
-              <li key={`footer-${item.href}`}>
-                <a
-                  href={item.href}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleInPageNavigation(item.href);
-                  }}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="footer-links">
-          <a href="/rss.xml">RSS</a>
-          <a href="/sitemap.xml">Sitemap</a>
-          <a
-            className="donate-link"
-            href={donateHref}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Поддержать проект
-          </a>
-        </div>
-        <p className="footer-credit">Built with Next.js</p>
+        <p>Built with Next.js</p>
+        <a href="/rss.xml">RSS</a>
+        <a href="/sitemap.xml">Sitemap</a>
+        <QRCodeWidget />
       </footer>
       <CookieConsent />
       <KeyboardHints />
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <FloatingControls
+        onScrollTop={scrollToTop}
+        onOpenContact={openContact}
+        onOpenDesign={() => setEditorOpen(true)}
+        onTogglePomodoro={() => setPomodoroOpen((value) => !value)}
+        onOpenSearch={openSearch}
+      />
+      <PomodoroTimer open={pomodoroOpen} onClose={() => setPomodoroOpen(false)} />
       </>
     </DesignContext.Provider>
   );
