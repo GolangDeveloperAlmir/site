@@ -30,10 +30,10 @@ If you'd like to help, pick an item or suggest a new one.
 - [x] Implement Skills & Languages section with categories, levels, badges and radar chart
 - [x] Develop Projects cards, show-more/all-projects links and env-driven placeholders
 - [x] Implement Interview Questions list with filters, search, and cloud sync
-- [ ] Create Travel grid, Gallery with lightbox and view toggle
-- [ ] Add Career and Personal timelines
-- [ ] Create Achievements and Inspiration lists
-- [ ] Implement FAQ with search and Now page with shareable updates
-- [ ] Add Recommended resources, Tools list and theme presets
-- [ ] Build Microblog, Music section and Coming Soon placeholders
-- [ ] Populate Contact groups driven by environment variables
+- [x] Create Travel grid, Gallery with lightbox and view toggle
+- [x] Add Career and Personal timelines
+- [x] Create Achievements and Inspiration lists
+- [x] Implement FAQ with search and Now page with shareable updates
+- [x] Add Recommended resources, Tools list and theme presets
+- [x] Build Microblog, Music section and Coming Soon placeholders
+- [x] Populate Contact groups driven by environment variables
