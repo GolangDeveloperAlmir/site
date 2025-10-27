@@ -17,23 +17,23 @@ If you'd like to help, pick an item or suggest a new one.
 - [x] Implement dark/light/sepia theme switcher and glass UI
 - [x] Add design editor with presets, font switcher, and JSON import/export
  - [x] Integrate cookie consent, announcement bar, visitor counter, analytics, keyboard hints
-- [ ] Provide global search, RSS link, QR code, donate button, reading progress indicator and back-to-top button
+- [x] Provide global search, RSS link, QR code, donate button, reading progress indicator and back-to-top button
 
 ### Navigation and Layout
-- [ ] Create sticky header with colour-changing underline and mobile scrollable nav
-- [ ] Add floating control bar and footer with RSS and sitemap links
-- [ ] Support left-side timeline markers and menu hover animations
+- [x] Create sticky header with colour-changing underline and mobile scrollable nav
+- [x] Add floating control bar and footer with RSS and sitemap links
+- [x] Support left-side timeline markers and menu hover animations
 
 ### Content Sections
 - [x] Build hero section with contact buttons and random quote
-- [ ] Write About and Mission/Vision content with optional photo
-- [ ] Implement Skills & Languages section with categories, levels, badges and radar chart
-- [ ] Develop Projects cards, show-more/all-projects links and env-driven placeholders
-- [ ] Implement Interview Questions list with filters, search, and cloud sync
-- [ ] Create Travel grid, Gallery with lightbox and view toggle
-- [ ] Add Career and Personal timelines
-- [ ] Create Achievements and Inspiration lists
-- [ ] Implement FAQ with search and Now page with shareable updates
-- [ ] Add Recommended resources, Tools list and theme presets
-- [ ] Build Microblog, Music section and Coming Soon placeholders
-- [ ] Populate Contact groups driven by environment variables
+- [x] Write About and Mission/Vision content with optional photo
+- [x] Implement Skills & Languages section with categories, levels, badges and radar chart
+- [x] Develop Projects cards, show-more/all-projects links and env-driven placeholders
+- [x] Implement Interview Questions list with filters, search, and cloud sync
+- [x] Create Travel grid, Gallery with lightbox and view toggle
+- [x] Add Career and Personal timelines
+- [x] Create Achievements and Inspiration lists
+- [x] Implement FAQ with search and Now page with shareable updates
+- [x] Add Recommended resources, Tools list and theme presets
+- [x] Build Microblog, Music section and Coming Soon placeholders
+- [x] Populate Contact groups driven by environment variables
