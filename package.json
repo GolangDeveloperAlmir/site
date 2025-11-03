@@ -26,7 +26,7 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "lucide-react": "^0.546.0"
+    "lucide-react": "^0.552.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
